@@ -38,11 +38,11 @@ for hours in $(seq -w 0 23)  ; do
 				done < $temp_file
 	
 			file_lines=`wc -l < $temp_file`
-			echo "Successful requests for $hours:$minutes:" $good
-			echo "BAD requests for `date +%Y`:$hours:$minutes" are $bad
+			echo "Succsessfull request for $hours:$minutes" are $good
+			echo "Bad request for $hours:$minutes" are $bad
 			if [ "$file_lines" != "0" ]; then 
-				echo "Mean response time per minute: " $(( $TIME / $file_lines ))
-				echo "MB sent per minute: " $(( $(( $SENTMB / $counter )) / 1024 ))
+				echo "Mean response time per minute is" $(( $TIME / $file_lines ))
+				echo "MB sent per minute are" $(( $SENTMB / $counter ))
 			else
 				continue
 			fi	
