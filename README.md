@@ -1,4 +1,4 @@
-# devops
+# parse_acces_log.sh
 
 The parse_acces_log.sh script is interactive script that will go over Apache access.log file in the following format "%a %I %u %t \"%r\" %>s %b %D" and based on user choice will print:
 
@@ -23,7 +23,7 @@ for option 3)
 
 for option 4)
 
-## Vagrant
+# Vagrant
 
 The vagrant folder contains the necessity to start two VM configured with puppet, one running nginx and the other running MySQL. You can start them by running: 
 
