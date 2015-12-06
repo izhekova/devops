@@ -1,53 +1,20 @@
 #!/bin/bash
 # Created by Irena Zhekova 2015-12-04
 
-log_file='/home/izhekova/devops/access.log'
-counter=0
-good=0
-bad=0
-request_time=0
-TIME=0
-SENTMB=0
-temp_file=/home/izhekova/devops/temp_file.txt
-for hours in $(seq -w 0 23)  ; do
-	for minutes in $(seq -w 0 59); do
-			grep "$hours:$minutes"  $log_file >> $temp_file
-			while read -r line
-			do
-				CODE=`echo $line | awk -F' ' '{print $9}'`  
-	      	                temp_time=`echo $line |awk -F' ' '{print $NF}'`
-				temp_sent=`echo $line |awk '{NF--; print $NF}'`
-				temp_request=`echo $line |awk -F ' ' '{print $6}'`
-				TIME=$(( $TIME + $temp_time ))
-				
-				case $CODE in
-				200)
-					good=$((good+1))
-				;;
-				500)	
-					bad=$((bad+1))	
-				;;
-				esac
-				
-				if [ "$temp_request" == '"GET' ]; then
-                                        counter=$((counter+1))
-                                        SENTMB=$(( $SENTMB + $temp_sent ))
-                                else
-                                        continue
-                                fi	
-				done < $temp_file
-	
-			file_lines=`wc -l < $temp_file`
-			echo "Succsessfull request for $hours:$minutes" are $good
-			echo "Bad request for $hours:$minutes" are $bad
-			if [ "$file_lines" != "0" ]; then 
-				echo "Mean response time per minute is" $(( $TIME / $file_lines ))
-				echo "MB sent per minute are" $(( $SENTMB / $counter ))
-			else
-				continue
-			fi	
-				echo
-                        echo -n "" > $temp_file
-	done					
-done									
-	
+log_file='./access.log'
+
+read -p "Please choose which result you want to see? 
+       1) Successful results
+       2) Bad results
+       3) Response time per minute
+       4) Average amount of MB
+       5) Dowload test acess log file
+Your choise here:" result
+    case $result in
+        1) awk '$9 == 200' $log_file | cut -d[ -f2 | cut -d] -f1 | awk -F: '{print "Successful request at " $2":"$3}' | sort -nk1 -nk2 | uniq -c ;;
+        2) awk '$9 == 500 || $9 == 404' $log_file | cut -d[ -f2 | cut -d] -f1 | awk -F: '{print "Bad request at " $2":"$3}' | sort -nk1 -nk2 | uniq -c ;;
+        3) awk '$6 == "\"GET"' $log_file | awk -F'[ ]' '{ print $4 $NF}' | awk -F '[:]' '{ print $2":"$3 " " $NF}' |awk '{a[$1]+=$NF}END{for(i in a) print "Average " i,a[i]/1024/1024 " MB"}' | sort ;;
+        4) awk '$6 == "\"GET"' $log_file | awk -F'[ ]' '{ print $4 $NF-1}' | awk -F '[:]' '{ print $2":"$3 " " $NF}' |awk '{count[$1]++;a[$1]+=$NF}END{for(i in a) print "Average " i,a[i]/1024/1024/count[i] " MB"}' | sort ;;
+        5) wget https://s3-eu-west-1.amazonaws.com/skyscanner-recruitment-resources/devops/access-log-example/c930ecf4b0a4426e619bddd8752c475ea772427db13eb92ee6a1a79b248ec0dc/access.log ;;
+        *) echo "Please choose valid option" ;;
+    esac
