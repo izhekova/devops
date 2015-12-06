@@ -23,8 +23,8 @@ for option 3)
 
 for option 4)
 
-## The vagrant folder contains the necessity to start two VM, one running nginx and the other running MySQL. You can start them by running: 
+## The vagrant folder contains the necessity to start two VM configured with puppet, one running nginx and the other running MySQL. You can start them by running: 
 
 `vagrant up`
 
-After succesful start you should be able to open http://127.0.0.1:8080/
+After succesful start you should be able to open `http://127.0.0.1:8080/` and see a welcome page.
