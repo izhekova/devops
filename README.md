@@ -1,6 +1,6 @@
 # devops
 
-The parse_acces_log.sh script is interactive script that will go over Apache access.log file in the following format "%a %I %u %t \"%r\" %>s %b %D" and based on user choice print will print:
+The parse_acces_log.sh script is interactive script that will go over Apache access.log file in the following format "%a %I %u %t \"%r\" %>s %b %D" and based on user choice will print:
 
        1) Successful results per minute (any request that returns HTTP 200)
        2) Number of error results per minute (any request that returns HTTP 200 an 500)
@@ -23,6 +23,8 @@ for option 3)
 
 for option 4)
 
-## The vagrant folder contains the necessity to start vagrant VM running nginx by running 
+## The vagrant folder contains the necessity to start two VM, one running nginx and the other running MySQL. You can start them by running: 
 
-vagrant up
+`vagrant up`
+
+After succesful start you should be able to open http://127.0.0.1:8080/
