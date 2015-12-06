@@ -1,24 +1,13 @@
 class { 'nginx': }
 
-file { '/var/www':
-  ensure => 'directory',
-}
-
-file { '/var/www/html':
-    ensure => 'directory',
-    owner   => nginx,
-    group   => nginx,
-}
-
-file { '/var/www/html/devops':
-  ensure => 'directory',
-  source => ['puppet:///modules/nginx'],
-  recurse => true,
+file { '/usr/share/nginx/html/index.html':
+  ensure => file,
+  source => ['puppet:///modules/nginx/index.html'],
 }
 nginx::resource::vhost { 'devops':
   ensure               => present,
   listen_port          => 80,
-  www_root             => '/var/www/html/devops',
+  www_root             => '/usr/share/nginx/html/',
   use_default_location => true,
   access_log           => '/var/log/nginx/devops_access.log',
   error_log            => '/var/log/nginx/devops_error.log',
