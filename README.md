@@ -3,7 +3,7 @@
 The parse_acces_log.sh script is interactive script that will go over Apache access.log file in the following format "%a %I %u %t \"%r\" %>s %b %D" and based on user choice will print:
 
        1) Successful results per minute (any request that returns HTTP 200)
-       2) Number of error results per minute (any request that returns HTTP 200 an 500)
+       2) Number of error results per minute (any request that returns HTTP 404 an 500)
        3) Mean response time per minute in seconds (average response time)
        4) MB sent per minute (all GET requests)
        5) Dowload test access log file (this will allow you to download sample access.log)
