@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 - name: Deploying errbit!
-  hosts: errbit 
+  hosts: app.devops 
   sudo: yes
   gather_facts: False
   vars: 
@@ -11,7 +11,7 @@
       git: repo={{ githuburl }} dest={{ errbithome }}
 
     - name: Bundler thing
-      command: /usr/bin/gem2.1 install bundler
+      command: /usr/bin/gem install bundler
 
     - name: Bundle install 
       command: /usr/local/bin/bundle install
@@ -26,7 +26,7 @@
       args:
           chdir: '{{ errbithome }}'
       environment: 
-          MONGO_URL: "mongodb://siteUserAdmin:<MongoPassword>@192.168.50.3:27017/admin"
+          MONGO_URL: "mongodb://mongouser:pass1@192.168.10.3:27017/mongotestdb"
       register: dbing
   
     - debug: msg="{{ dbing.stdout }}"
@@ -34,5 +34,5 @@
     - copy: src=start.sh dest=/home/vagrant/errbit/start.sh
     - file: path=/home/vagrant/errbit/start.sh mode=0755
     - file: path=/etc/nginx/sites-enabled/default state=absent
-    - copy: src=files/nginx/nginx.conf dest=/etc/nginx/sites-enabled/rails.conf
+    - copy: src=nginx.conf dest=/etc/nginx/sites-enabled/rails.conf
     - service: name=nginx state=restarted
