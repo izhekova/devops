@@ -1,32 +1,31 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 Vagrant.configure(2) do |config|
-    config.vm.box = "centos66"
-    config.vm.box_url = "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.0.0/centos-6.6-x86_64.box"
 #    config.vm.network "public_network"
-#    config.vm.boot_timeout = 600
 
     config.vm.define :app do |app|
-    app.vm.hostname = "app.devops"
-    app.vm.box = "centos66"
-    app.vm.network "private_network", ip: "192.168.10.2"
-    app.vm.provision :puppet do |puppet|
-        puppet.manifests_path = "puppet/manifests"
-        puppet.module_path = "puppet/modules"
-        puppet.manifest_file  = "errbit.pp"
-    app.vm.provision :ansible do |ansible|
-        ansible.playbook = "playbook/deployerrbit.yaml"
-  end
+        app.vm.hostname = "app"
+        app.vm.box = "ginja/centos-6.5-x64-rvm-ruby2.0.0-puppet"
+        app.vm.network "private_network", ip: "192.168.10.2"
+        app.vm.provision :puppet do |puppet|
+            puppet.manifests_path = "puppet/manifests"
+            puppet.module_path = "puppet/modules"
+            puppet.manifest_file  = "errbit.pp"
+        app.vm.provision :ansible do |ansible|
+            ansible.playbook = "playbook/deployerrbit.yaml"
+            ansible.sudo = true
+        end
+      end
     end
-  end
-  config.vm.define :db do |db|
-    db.vm.hostname = "mongo.devops"
-    db.vm.box = "centos66"
-    db.vm.network "private_network", ip: "192.168.10.3"
-    db.vm.provision :puppet do |puppet|
-        puppet.manifests_path = "puppet/manifests"
-        puppet.module_path = "puppet/modules" 
-        puppet.manifest_file  = "mongo.pp"
+    config.vm.define :db do |db|
+        db.vm.hostname = "mongo"
+        db.vm.box = "ginja/centos-6.5-x64-rvm-ruby2.0.0-puppet"
+        db.vm.network "private_network", ip: "192.168.10.3"
+        db.vm.provision :puppet do |puppet|
+            puppet.manifests_path = "puppet/manifests"
+            puppet.module_path = "puppet/modules" 
+            puppet.manifest_file  = "mongo.pp"
+        end
     end
-  end
 end

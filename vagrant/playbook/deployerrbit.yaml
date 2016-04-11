@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 - name: Deploying errbit!
-  hosts: app.devops 
+  hosts: app
   sudo: yes
   gather_facts: False
   vars: 
@@ -10,25 +10,42 @@
     - name: GIT clone errbit repository
       git: repo={{ githuburl }} dest={{ errbithome }}
 
-    - name: Bundler thing
-      command: /usr/bin/gem install bundler
+    - name: Update ruby version
+      command: rvm install 2.1.0
+      environment: 
+          PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+          rvm_path: /usr/local/rvm
 
+    - name: Bundler thing
+      command: gem install bundler
+      environment: 
+          PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+          GEM_PATH: /usr/local/rvm/gems/ruby-2.1.0:/usr/local/rvm/gems/ruby-2.1.0@global
+    
     - name: Bundle install 
-      command: /usr/local/bin/bundle install
-      args: 
+      command: bundle install 
+      environment:
+          PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+          GEM_PATH: /usr/local/rvm/gems/ruby-2.1.0:/usr/local/rvm/gems/ruby-2.1.0@global
+      args:
        chdir: '{{ errbithome }}'
-      register: bundleout      
+      register: bundleout
 
     - debug: msg="{{ bundleout.stdout }}"
     
+#    - name: SED COMMAND
+#      command: sed -i 's/apps.each\ do\ |app|/apps.each\ |app|\ do/g' /home/vagrant/errbit/app/helpers/apps_helper.rb
+#
     - name: Bundle exec
-      command: /usr/local/bin/bundle exec rake errbit:bootstrap
+      command: bundle exec rake errbit:bootstrap
       args:
-          chdir: '{{ errbithome }}'
-      environment: 
-          MONGO_URL: "mongodb://mongouser:pass1@192.168.10.3:27017/mongotestdb"
+       chdir: '{{ errbithome }}'
+      environment:
+          PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+          GEM_PATH: /usr/local/rvm/gems/ruby-2.1.0:/usr/local/rvm/gems/ruby-2.1.0@global
+          MONGO_URL: "mongodb://mongouser:passwd123@192.168.10.3:27017/mongotestdb"
       register: dbing
-  
+
     - debug: msg="{{ dbing.stdout }}"
 
     - copy: src=start.sh dest=/home/vagrant/errbit/start.sh
