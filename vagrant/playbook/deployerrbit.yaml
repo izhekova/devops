@@ -1,5 +1,5 @@
 #!/usr/bin/env ansible-playbook
-- name: Deploying errbit!
+- name: Deploying errbit application
   hosts: app
   sudo: yes
   gather_facts: False
@@ -16,7 +16,7 @@
           PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
           rvm_path: /usr/local/rvm
 
-    - name: Bundler thing
+    - name: Bundler install with gem
       command: gem install bundler
       environment: 
           PATH: /usr/local/rvm/gems/ruby-2.1.0/bin:/usr/local/rvm/gems/ruby-2.1.0@global/bin:/usr/local/rvm/rubies/ruby-2.1.0/bin:/usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
@@ -33,9 +33,6 @@
 
     - debug: msg="{{ bundleout.stdout }}"
     
-#    - name: SED COMMAND
-#      command: sed -i 's/apps.each\ do\ |app|/apps.each\ |app|\ do/g' /home/vagrant/errbit/app/helpers/apps_helper.rb
-#
     - name: Bundle exec
       command: bundle exec rake errbit:bootstrap
       args:

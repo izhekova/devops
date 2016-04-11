@@ -14,7 +14,7 @@ class {'::mongodb::globals':
 #    bind_ip => '192.168.10.3'
 #	} ->
 
-#class {'mongodb::client':}->
+class {'mongodb::client':}->
 
 #mongodb_user { mongouser:
 #  name          => 'mongouser',
