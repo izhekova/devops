@@ -11,7 +11,7 @@ class {'::mongodb::globals':
 
 class {'::mongodb::server': 
 	ensure	=> present,
-    auth => true,
+    auth => false,
 	rest	=> true,
     port    => 27017,
     bind_ip => ['127.0.0.1', '192.168.10.3']
