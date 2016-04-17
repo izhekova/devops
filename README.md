@@ -8,13 +8,14 @@ The vagrant folder contains the necessity to start two VM configured with puppet
 
 `vagrant up`
 
-This will install MondoDB server with version of mongodb: `2.6.12`
+This will install:
 
-The other server will be installed with: 
-Gem version:
-`2.2.5`
-Ruby inition version:
-`2.0.0`
-Ruby updated version:
-`2.1.0`
-Errbit application 
+* MondoDB server with version of mongodb: `2.6.12`
+
+* Errbit application server with: 
+- Nginx
+- Gem version: `2.4.8`
+- Ruby version: `2.1.9`
+- Errbit application
+
+* After successfull installation, the application server can be accessed at http://192.168.10.2 from the vagrant host.
